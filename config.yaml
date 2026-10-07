@@ -1,0 +1,74 @@
+# The base URL of Dex. This is what your client apps point to.
+issuer: http://localhost:5556/dex
+
+# Storage configuration tells Dex where to store authorization states and keys.
+storage:
+  type: sqlite3
+  config:
+    file: /var/dex/dex.db
+
+# Configures the network endpoint for the Dex web server.
+web:
+  http: 0.0.0.0:5556
+
+# Configuration for upstream identity providers
+connectors:
+  - type: ldap
+    id: freeipa
+    name: FreeIPA
+    config:
+      # Host and LDAPS port (636) of your FreeIPA master server
+      host: ipa1.lab.sanderson.com:636
+      
+      # Path to the FreeIPA root CA certificate inside the Dex container
+      # FreeIPA signs its own certs; copy /etc/ipa/ca.crt to your container storage
+      rootCA: /etc/dex/certs/ca.crt
+      
+      # Secure connection parameters
+      insecureNoSSL: false
+      insecureSkipVerify: true
+
+      # System account used by Dex to initially bind and search the directory.
+      # It is best practice to create a dedicated read-only system user in FreeIPA.
+      bindDN: uid=dex-service,cn=sysaccounts,cn=etc,dc=example,dc=com
+      bindPW: "password"
+
+      # The attribute used for the username prompt screen
+      usernamePrompt: "IDM Username"
+
+      # Rules to map directory entries to OIDC identity attributes
+      userSearch:
+        # Standard FreeIPA container location for active user accounts
+        baseDN: cn=users,cn=accounts,dc=lab,dc=sanderson,dc=com
+        
+        # Matches the login prompt input to the FreeIPA uid attribute
+        filter: "(objectClass=posixAccount)"
+        username: uid
+        idAttr: uid
+        
+        # Maps standard OpenID claims to FreeIPA attributes
+        emailAttr: mail
+        nameAttr: cn
+
+      # Rules to locate groups a user belongs to for OIDC scopes
+      groupSearch:
+        # Standard FreeIPA container location for user groups
+        baseDN: cn=groups,cn=accounts,dc=example,dc=com
+        filter: "(objectClass=ipausergroup)"
+        
+        # FreeIPA uses full user DNs inside a group's 'member' attribute
+        userAttr: DN
+        groupAttr: member
+        nameAttr: cn
+
+# Static clients that are allowed to request tokens from Dex
+staticClients:
+  - id: headlamp
+    redirectURIs:
+      - 'http://192.168.1.221'
+    name: 'Headlamp Authentication'
+    secret: ZXhhbXBsZS1hcHAtc2VjcmV0LWtleS1nb2VzLWhlcmU=
+
+# Enables standard OAuth2 token components
+oauth2:
+  skipApprovalScreen: false
