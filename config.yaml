@@ -65,7 +65,7 @@ connectors:
 staticClients:
   - id: headlamp
     redirectURIs:
-      - 'http://192.168.1.221'
+      - 'http://192.168.1.221/oidc-callback'
     name: 'Headlamp Authentication'
     secret: ZXhhbXBsZS1hcHAtc2VjcmV0LWtleS1nb2VzLWhlcmU=
 
