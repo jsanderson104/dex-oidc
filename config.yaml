@@ -1,5 +1,6 @@
 # The base URL of Dex. This is what your client apps point to.
-issuer: http://localhost:5556/dex
+# dex.lab.sanderson.com in DNS
+issuer: http://192.168.1.230:5556/dex
 
 # Storage configuration tells Dex where to store authorization states and keys.
 storage:
