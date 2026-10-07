@@ -6,8 +6,8 @@ config:
     # Must match the 'id' under Dex staticClients
     clientID: "headlamp"
     
-    # Must match the 'secret' under Dex staticClients
-    clientSecret: "super-secret-key-1234"
+    # Must match the 'secret' under Dex staticClients. This value must match the secret defined in Dex's config.yaml file in this repo.
+    clientSecret: "ZXhhbXBsZS1hcHAtc2VjcmV0LWtleS1nb2VzLWhlcmU="
     
     # Must match the EXACT 'issuer' URL string configured at the top of your Dex config
     issuerURL: "http://<YOUR_DEX_URL>:5556/dex"
