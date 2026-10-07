@@ -1,0 +1,16 @@
+# This config file is used with the command: helm upgrade --install headlamp headlamp/headlamp -f values.yaml -n headlamp
+# to apply the DEX configuration to the Headlamp deployment.  I don't know anything about helm yet so I trust this works and will learn the details later.
+config:
+  inCluster: true
+  oidc:
+    # Must match the 'id' under Dex staticClients
+    clientID: "headlamp"
+    
+    # Must match the 'secret' under Dex staticClients
+    clientSecret: "super-secret-key-1234"
+    
+    # Must match the EXACT 'issuer' URL string configured at the top of your Dex config
+    issuerURL: "http://<YOUR_DEX_URL>:5556/dex"
+    
+    # Standard profile claims + 'groups' so FreeIPA groups are forwarded to K8s RBAC
+    scopes: "openid,profile,email,groups" 
